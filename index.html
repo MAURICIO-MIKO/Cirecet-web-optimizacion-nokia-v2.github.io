@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CIRCET · Generador XML Nokia</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="logo">
+      <img src="img/logo.png" alt="CIRCET" />
+      <span>Ingeniería CIRCET</span>
+    </div>
+    <nav class="nav-actions">
+      <button class="btn-secondary">⚙️ Opciones</button>
+      <button id="btnAirscale" class="btn-secondary">📄 Descargar Airscale</button>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-box">
+      <h1>INGENIERÍA CIRCET</h1>
+      <p>Herramienta de Integración · Generación de Script Nokia</p>
+    </div>
+  </section>
+
+  <!-- CONTENIDO -->
+  <main class="content">
+    <section class="card upload">
+      <h2>📂 Archivos de entrada</h2>
+
+      <div class="form-group">
+        <label for="excelFile">Seleccionar Excel (.xls / .xlsx)</label>
+        <input type="file" id="excelFile" accept=".xls,.xlsx" />
+      </div>
+
+      <div class="form-group">
+        <label for="plantilla">Seleccionar plantilla XML</label>
+        <select id="plantilla">
+          <option value="plantilla_L1800+NR3500.xml">L18 + NR35</option>
+          <option value="plantilla_L2600+NR3500.xml">L26 + NR35</option>
+        </select>
+      </div>
+
+      <button id="leerExcelBtn" class="btn-primary">⚙️ Generar XML</button>
+    </section>
+
+    <div id="resultado"></div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 <span>CIRCET España</span> — Ingeniería de Red</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
