@@ -1,3 +1,5 @@
+// --- FUNCIONALIDAD PRINCIPAL ---
+
 document.getElementById("leerExcelBtn").addEventListener("click", () => {
   const file = document.getElementById("excelFile").files[0];
   if (!file) {
@@ -46,7 +48,7 @@ function generarFormulario(sheet, contenedor) {
   });
 }
 
-// Generar XML
+// --- GENERAR XML ---
 document.getElementById("generarBtn").addEventListener("click", async () => {
   const plantilla = document.getElementById("plantilla").value;
   const excel = document.getElementById("excelFile").files[0];
@@ -63,21 +65,27 @@ document.getElementById("generarBtn").addEventListener("click", async () => {
 
   resultado.innerHTML = "Procesando... ⏳";
 
-  const res = await fetch("https://nokia-backend.onrender.com/procesar", {
-    method: "POST",
-    body: formData,
-  });
+  try {
+    const res = await fetch("https://nokia-backend.onrender.com/procesar", {
+      method: "POST",
+      body: formData,
+    });
 
-  if (res.ok) {
-    const blob = await res.blob();
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "salida.xml";
-    a.click();
-    URL.revokeObjectURL(url);
-    resultado.innerHTML = "✅ XML generado correctamente.";
-  } else {
-    resultado.innerHTML = "❌ Error al generar XML.";
+    if (res.ok) {
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "salida.xml";
+      a.click();
+      URL.revokeObjectURL(url);
+      resultado.innerHTML = "✅ XML generado correctamente.";
+    } else {
+      const errorText = await res.text();
+      resultado.innerHTML = `❌ Error al generar XML:<br>${errorText}`;
+    }
+  } catch (err) {
+    console.error(err);
+    resultado.innerHTML = "⚠️ Error de conexión con el servidor.";
   }
 });
