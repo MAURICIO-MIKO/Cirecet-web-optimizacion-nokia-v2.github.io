@@ -29,6 +29,7 @@
 
   <!-- CONTENIDO -->
   <main class="content">
+    <!-- SUBIR ARCHIVOS -->
     <section class="card upload">
       <h2>📂 Archivos de entrada</h2>
 
@@ -45,7 +46,18 @@
         </select>
       </div>
 
-      <button id="leerExcelBtn" class="btn-primary">⚙️ Generar XML</button>
+      <button id="leerExcelBtn" class="btn-primary">📊 Cargar Excel</button>
+    </section>
+
+    <!-- FORMULARIO DE PARÁMETROS -->
+    <section id="formularios" class="card hidden">
+      <h2>🛰 Parámetros 5G</h2>
+      <form id="form5g" class="grid-form"></form>
+
+      <h2>📡 Parámetros 4G</h2>
+      <form id="form4g" class="grid-form"></form>
+
+      <button id="generarBtn" class="btn-success">⚙️ Generar XML</button>
     </section>
 
     <div id="resultado"></div>
@@ -56,6 +68,7 @@
     <p>© 2025 <span>CIRCET España</span> — Ingeniería de Red</p>
   </footer>
 
+  <script src="xlsx.full.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
