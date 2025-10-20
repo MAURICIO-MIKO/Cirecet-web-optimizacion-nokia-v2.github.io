@@ -1,0 +1,44 @@
+body { font-family: Arial, sans-serif; background: #f4f4f4; color: #333; }
+.card { background: white; margin: 20px auto; padding: 20px; border-radius: 12px; max-width: 800px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+.btn-primary { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; }
+.btn-primary:hover { background: #0056b3; }
+table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+tr:nth-child(even) { background: #f9f9f9; }
+.hidden { display: none; }
+/* === TÍTULO PRINCIPAL DEL COMPARADOR === */
+.titulo-principal {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1d3557;           /* azul oscuro profesional */
+  margin-bottom: 1rem;
+  margin-top: 10px;
+  line-height: 1.3;
+  position: relative;
+  animation: fadeIn 0.8s ease;
+}
+
+.titulo-principal::after {
+  content: "";
+  display: block;
+  width: 90px;
+  height: 4px;
+  background: linear-gradient(90deg, #007bff, #00c6ff);
+  margin: 0.6rem auto 0;
+  border-radius: 4px;
+}
+
+.titulo-principal small {
+  display: block;
+  font-size: 1rem;
+  color: #666;
+  margin-top: 0.4rem;
+  font-weight: 400;
+}
+
+/* === ANIMACIÓN SUAVE DE ENTRADA === */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

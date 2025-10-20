@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Comparador de Excel — CIRCET</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    .grid-form {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    }
+    .form-item {
+      padding: 1rem;
+      border-radius: 10px;
+      background: #fafafa;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    input {
+      width: 100%;
+      padding: 6px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    p {
+      margin: 0.3rem 0;
+    }
+  </style>
+</head>
+<body>
+<h1 class="titulo-principal">
+  🧩 Comparador de Excel
+  <small>Encabezados · Fila 2 · Hojas 5G / 4G</small>
+</h1>
+
+
+
+  <div class="form-group">
+    <label>Excel 1:</label>
+    <input type="file" id="excel1" accept=".xls,.xlsx" />
+  </div>
+  <div class="form-group">
+    <label>Excel 2:</label>
+    <input type="file" id="excel2" accept=".xls,.xlsx" />
+  </div>
+
+  <button id="compararBtn" class="btn-primary">🔍 Comparar archivos</button>
+
+  <div id="resultado" class="card hidden"></div>
+
+  <script src="../xlsx.full.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
