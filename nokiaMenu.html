@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CIRCET · Generadores Nokia</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(180deg, #fff9f3, #ffe3c9);
+      margin: 0;
+    }
+
+    header {
+      background: linear-gradient(90deg, #ff7f00, #ff9e42);
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .logo img {
+      width: 40px;
+      height: 40px;
+    }
+    .logo h1 {
+      margin: 0;
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+    .logo span {
+      display: block;
+      font-size: 0.8rem;
+      color: #fff6ee;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+    }
+    nav button {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      font-weight: 600;
+      border-radius: 8px;
+      padding: 0.4rem 0.9rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    nav button:hover {
+      background: rgba(255,255,255,0.35);
+    }
+    nav button.active {
+      background: white;
+      color: #ff7f00;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 2rem auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      padding: 2rem;
+    }
+
+    h2 {
+      color: #0056b3;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 1.5rem;
+      border-bottom: 2px solid #e6e6e6;
+      padding-bottom: 0.5rem;
+    }
+
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .card {
+      width: 270px;
+      background: #f8f8f8;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      padding: 1.5rem 1rem;
+      text-align: center;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    }
+    .card img {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 0.8rem;
+    }
+    .card h3 {
+      margin: 0;
+      color: #333;
+      font-size: 1.1rem;
+    }
+    .card p {
+      font-size: 0.9rem;
+      color: #555;
+      margin: 0.5rem 0 1rem;
+    }
+    .card button {
+      background: #ff7f00;
+      border: none;
+      color: white;
+      border-radius: 6px;
+      padding: 0.5rem 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .card button:hover {
+      background: #ff9842;
+    }
+
+    footer {
+      text-align: center;
+      color: #777;
+      font-size: 0.9rem;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <img src="img/logo.png" alt="CIRCET">
+      <div>
+        <h1>Generadores XML/MOS nokia</h1>
+        <span>Sistema Automático de Generación de Archivos de Configuración de nokia</span>
+      </div>
+    </div>
+    <nav>
+      <button onclick="window.location.href='panelSeleccion.html'">🏠 Inicio</button>
+      <button>⚠️ Manual de usuario</button>
+    </nav>
+  </header>
+
+  <main>
+    <h2>💠 Generadores Nokia</h2>
+    <p>Seleccione el generador que desea utilizar para procesar sus archivos Excel y generar automáticamente los archivos de configuración para equipos Nokia.</p>
+
+    <div class="cards">
+      <div class="card" onclick="location.href='nokia5G.html'">
+        <img src="img/solo-5G.jpg" alt="">
+        <h3>SC3500 (SOLO 5G)</h3>
+        <p>Genera XML de configuración para Nokia SC3500 (solo 5G NR)</p>
+        <button>Generar 5G →</button>
+      </div>
+
+      <div class="card" onclick="location.href='principal.html'" >
+        <img src="img/smart_cell.jpg" alt="">
+        <h3>SC3500 + 2600 (4G+5G)</h3>
+        <p>Genera XML para Nokia SC3500 + LTE 2600 (4G+5G combinado)</p>
+        <button>Generar 4G+5G →</button>
+      </div>
+
+      <div class="card">
+        <img src="img/icon_baseline.png" alt="">
+        <h3>BaseLine 5G</h3>
+        <p>Actualiza XMLs base según parámetros de referencia Telefónica</p>
+        <button>Ir a BaseLine 5G</button>
+      </div>
+
+      <div class="card">
+        <img src="img/icon_3g.png" alt="">
+        <h3>3G Integration</h3>
+        <p>Generador completo de integración 3G RNC (IPNB, WBTS, WCEL, ADJL, ADJS)</p>
+        <button>Generar 3G →</button>
+      </div>
+
+      <div class="card">
+        <img src="img/icon_planned.png" alt="">
+        <h3>Planned RNC (3G)</h3>
+        <p>Genera configuraciones planificadas para RNC 3G de Nokia</p>
+        <button>Generar Planned RNC →</button>
+      </div>
+
+      <div class="card">
+        <img src="img/icon_compare.png" alt="">
+        <h3>Comparador</h3>
+        <p>Compara archivos de configuración para identificar diferencias</p>
+        <button>Ir al Comparador</button>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

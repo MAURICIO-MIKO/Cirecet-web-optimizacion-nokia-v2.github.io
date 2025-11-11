@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CIRCET · Panel de Selección</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ==== ESTILO GENERAL ==== */
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      margin: 0;
+      background: linear-gradient(180deg, #fff9f3, #ffe3c9);
+      color: #333;
+    }
+
+    /* ==== HEADER ==== */
+    header {
+      background: linear-gradient(90deg, #ff7f00, #ff9e42);
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    }
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .logo-area img {
+      width: 36px;
+      height: 36px;
+    }
+    .logo-area h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    .logo-area span {
+      display: block;
+      font-size: 0.8rem;
+      color: #fff8ee;
+      font-weight: 400;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.6rem;
+    }
+    nav button {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      font-weight: 600;
+      border-radius: 8px;
+      padding: 0.4rem 0.9rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    nav button:hover {
+      background: rgba(255,255,255,0.35);
+    }
+    nav button.active {
+      background: white;
+      color: #ff7f00;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    /* ==== CONTENIDO ==== */
+    main {
+      max-width: 1100px;
+      margin: 2.5rem auto;
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    main h2 {
+      text-align: center;
+      color: #e76f00;
+      font-size: 1.6rem;
+      margin-bottom: 0.4rem;
+    }
+    main p.sub {
+      text-align: center;
+      color: #666;
+      margin-bottom: 2rem;
+    }
+
+    /* ==== TARJETAS ==== */
+    .cards {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+    .card {
+      width: 210px;
+      background: #f5f5f5;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      padding: 1.5rem 1rem;
+      text-align: center;
+      transition: 0.3s ease;
+      cursor: pointer;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+      background: #fafafa;
+    }
+    .card img {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 1rem;
+    }
+    .card h3 {
+      margin: 0;
+      color: #333;
+      font-size: 1.2rem;
+    }
+    .card span {
+      display: block;
+      font-size: 0.9rem;
+      color: #666;
+      margin-top: 0.4rem;
+    }
+
+    /* ==== INFO ==== */
+    .info {
+      margin-top: 2.5rem;
+      background: #f0f0f0;
+      border-radius: 10px;
+      padding: 1.2rem 1rem;
+      text-align: center;
+      font-size: 0.95rem;
+      color: #333;
+      border-left: 6px solid #1e88e5;
+    }
+    .info strong {
+      color: #1e88e5;
+      font-weight: 700;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #777;
+      margin-bottom: 2rem;
+    }
+
+    /* ==== BOTÓN DE CIERRE ==== */
+    #logoutBtn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #ffffff;
+      color: #d35400;
+      border: 2px solid #ffd9b3;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      transition: background 0.2s ease;
+    }
+    #logoutBtn:hover {
+      background: #fff6ee;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- === HEADER === -->
+  <header>
+    <div class="logo-area">
+      <img src="img/logo.png" alt="CIRCET" />
+      <div>
+        <h1>Generadores XML/MOS</h1>
+        <span>Sistema Automático de Generación de Archivos de Configuración</span>
+      </div>
+    </div>
+    <nav>
+      <button id="logoutBtn">Volver a Login</button>
+    </nav>
+  </header>
+
+  
+
+  <!-- === CONTENIDO === -->
+  <main>
+    <h2>🏗️ NAVEGADOR (Cliente)</h2>
+    <p class="sub">Seleccione el fabricante para acceder a los generadores de configuración correspondientes.</p>
+
+    <div class="cards">
+     
+      <div class="card" id="ericssonCard">
+        <img src="img/Ericsson.jpg" alt="Ericsson" />
+        <h3>Ericsson</h3>
+        <span>Generadores Ericsson</span>
+      </div>
+
+      <div class="card" id="huaweiCard">
+        <img src="img/Huawei.png" alt="Huawei" />
+        <h3>Huawei</h3>
+        <span>Generadores Huawei</span>
+      </div>
+
+      <div class="card" id="nokiaCard">
+        <img src="img/Nokia-.jpg" alt="Nokia" />
+        <h3>Nokia</h3>
+        <span>Generadores Nokia</span>
+      </div>
+    </div>
+
+    <div class="info">
+      <strong>ℹ️ Información</strong><br>
+      Esta aplicación web permite generar automáticamente archivos de configuración para diferentes fabricantes de equipamiento de telecomunicaciones.<br>
+      Seleccione el fabricante correspondiente para comenzar.
+    </div>
+  </main>
+
+
+  <script>
+    // Verificación de sesión
+    const SESSION_KEY = "usuarioCIRCET_SESSION";
+    const session = localStorage.getItem(SESSION_KEY);
+    if (!session) {
+      window.location.href = "index.html"; // Sin sesión, volver al login
+    }
+
+    // Cerrar sesión
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      localStorage.removeItem(SESSION_KEY);
+      window.location.href = "index.html";
+    });
+
+    // Enlaces de tarjetas
+    document.getElementById("nokiaCard").addEventListener("click", () => {
+      window.location.href = "nokiaMenu.html";
+    });
+    document.getElementById("ericssonCard").addEventListener("click", () => {
+      window.location.href = "ericssonMenu.html";
+    });
+    document.getElementById("huaweiCard").addEventListener("click", () => {
+      window.location.href = "huaweiMenu.html";
+    });
+  
+  </script>
+</body>
+</html>

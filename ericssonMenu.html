@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CIRCET · Generadores Ericsson</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Estilo general del contenedor */
+    .main-container {
+      max-width: 1100px;
+      margin: 2rem auto;
+      background: #fff;
+      padding: 2rem 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      color: #e67e22;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1rem;
+    }
+
+    .section-title img {
+      width: 30px;
+      height: 30px;
+    }
+
+    .section-subtitle {
+      color: #444;
+      margin-bottom: 2rem;
+    }
+
+    .generadores-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: linear-gradient(180deg, #fafafa, #e9e9e9);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    }
+
+    .card h3 {
+      margin: 0.8rem 0;
+      color: #333;
+      font-weight: 700;
+    }
+
+    .card p {
+      font-size: 0.9rem;
+      color: #555;
+      min-height: 50px;
+    }
+
+    .btn-orange {
+      display: inline-block;
+      background: #f97316;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 18px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 0.8rem;
+      transition: background 0.3s;
+    }
+
+    .btn-orange:hover {
+      background: #d65f0b;
+    }
+
+    footer {
+      text-align: center;
+      color: #777;
+      margin-top: 2rem;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="logo">
+      <img src="img/logo.png" alt="CIRCET" />
+      <span>Ingeniería CIRCET</span>
+    </div>
+    <nav class="nav-actions">
+      <button id="btnVolver" class="btn-secondary">🏠 Volver al Inicio</button>
+    </nav>
+  </header>
+
+  <main class="main-container">
+    <h2 class="section-title">⚙️ Generadores Ericsson</h2>
+    <p class="section-subtitle">
+      Seleccione el generador que desea utilizar para procesar sus archivos Excel y generar automáticamente los archivos de configuración para equipos Ericsson.
+    </p>
+
+    <div class="generadores-grid">
+      <div class="card">
+        <img src="img/icon_excel.png" alt="Excel" width="60">
+        <h3>Generador SC_Ericsson</h3>
+        <p>Genera archivos XML de integración MSR a partir de plantillas Excel (.xlsx/.xls).</p>
+        <button class="btn-orange" onclick="window.location.href='ericsson_SC.html'">Ir al Generador SC</button>
+      </div>
+
+      <div class="card">
+        <img src="img/icon_lock.png" alt="IPSec" width="60">
+        <h3>Generador IPsec Ericsson</h3>
+        <p>Genera scripts .mos de configuración IPsec para nodos en Cáceres y Badajoz.</p>
+        <button class="btn-orange" onclick="window.location.href='ericsson_IPsec.html'">Ir al Generador IPsec</button>
+      </div>
+
+      <div class="card">
+        <img src="img/icon_anchor.png" alt="Anchor" width="60">
+        <h3>Anchor_Generator_SC</h3>
+        <p>Genera archivos .mos de configuración ANCHOR 4G-5G desde Excel (.xls).</p>
+        <button class="btn-orange" onclick="window.location.href='ericsson_anchor.html'">Ir al Generador ANCHOR</button>
+      </div>
+
+      <div class="card">
+        <img src="img/icon_compare.png" alt="Comparador" width="60">
+        <h3>Comparador</h3>
+        <p>Compare dos archivos y visualice las diferencias línea por línea.</p>
+        <button class="btn-orange" onclick="window.location.href='comparador/index.html'">Ir al Comparador</button>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    document.getElementById("btnVolver").addEventListener("click", () => {
+      window.location.href = "panelSeleccion.html";
+    });
+  </script>
+
+</body>
+</html>

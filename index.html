@@ -3,75 +3,160 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CIRCET · Generador XML Nokia</title>
+  <title>CIRCET · Acceso</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    /* === LOGIN SCREEN === */
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(160deg, #1d3557, #007bff, #00c6ff);
+      background-size: 300% 300%;
+      animation: fondoCIRCETazul 12s ease infinite;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @keyframes fondoCIRCETazul {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .login-box {
+      background: white;
+      padding: 2rem 2.5rem;
+      border-radius: 14px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+      text-align: center;
+      width: 320px;
+      animation: fadeIn 1s ease;
+    }
+
+    .login-box h2 {
+      color: #1d3557;
+      margin-bottom: 0.5rem;
+    }
+
+    .login-box p {
+      font-size: 0.95rem;
+      color: #555;
+      margin-bottom: 1.5rem;
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    .login-box button {
+      width: 100%;
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.2s ease;
+    }
+
+    .login-box button:hover {
+      background: #0056b3;
+    }
+
+    .login-error {
+      color: red;
+      font-size: 0.9rem;
+      margin-top: 5px;
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    footer {
+      position: fixed;
+      bottom: 15px;
+      width: 100%;
+      text-align: center;
+      color: #fff;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+  </style>
 </head>
+
 <body>
-  <!-- NAVBAR -->
-  <header class="navbar">
-    <div class="logo">
-      <img src="img/logo.png" alt="CIRCET" />
-      <span>Ingeniería CIRCET</span>
-    </div>
-     <nav class="nav-actions">
-         <button class="btn-secondary">⚙️ Opciones</button>
-         <button id="btnAirscale" class="btn-secondary">📄 Descargar Airscale</button>
-         <a href="./comparador/" target="_blank" class="btn-secondary">📊 Comparador Excel</a>
-     </nav>
+  <div class="login-box">
+    <h2>🔐 Acceso CIRCET</h2>
+    <p>Introduce tus credenciales para continuar</p>
+    <input type="text" id="usuario" placeholder="Usuario" />
+    <input type="password" id="contrasena" placeholder="Contraseña" />
+    <button id="loginBtn">Entrar</button>
+    <div class="login-error" id="loginError">❌ Usuario o contraseña incorrectos</div>
+  </div>
 
-  </header>
+  <script>
+    const SESSION_KEY = "usuarioCIRCET_SESSION";
+    const SESSION_TTL_MS = 12 * 60 * 60 * 1000; // 12h
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-box">
-      <h1>INGENIERÍA CIRCET</h1>
-      <p>Herramienta de Integración · Generación de Script Nokia</p>
-    </div>
-  </section>
+    function setSession(user) {
+      const payload = { user, ts: Date.now() };
+      localStorage.setItem(SESSION_KEY, JSON.stringify(payload));
+    }
 
-  <!-- CONTENIDO -->
-  <main class="content">
-    <!-- SUBIR ARCHIVOS -->
-    <section class="card upload">
-      <h2>📂 Archivos de entrada</h2>
+    function getSession() {
+      try {
+        const raw = localStorage.getItem(SESSION_KEY);
+        if (!raw) return null;
+        const data = JSON.parse(raw);
+        if (!data.ts || Date.now() - data.ts > SESSION_TTL_MS) {
+          localStorage.removeItem(SESSION_KEY);
+          return null;
+        }
+        return data;
+      } catch {
+        return null;
+      }
+    }
 
-      <div class="form-group">
-        <label for="excelFile">Seleccionar Excel (.xls / .xlsx)</label>
-        <input type="file" id="excelFile" accept=".xls,.xlsx" />
-      </div>
+    // --- AUTOLOGIN ---
+    const session = getSession();
+    if (session) {
+      window.location.href = "panelSeleccion.html";
+    }
 
-      <div class="form-group">
-        <label for="plantilla">Seleccionar plantilla XML</label>
-        <select id="plantilla">
-          <option value="plantilla_L1800+NR3500.xml">L18 + NR35</option>
-          <option value="plantilla_L2600+NR3500.xml">L26 + NR35</option>
-        </select>
-      </div>
+    // --- LOGIN MANUAL ---
+    document.getElementById("loginBtn").addEventListener("click", () => {
+      const usuario = document.getElementById("usuario").value.trim();
+      const contrasena = document.getElementById("contrasena").value.trim();
+      const error = document.getElementById("loginError");
 
-      <button id="leerExcelBtn" class="btn-primary">📊 Cargar Excel</button>
-    </section>
+      // === LISTA DE USUARIOS PERMITIDOS ===
+  const usuariosPermitidos = {
+    "admin": "Briceño",
+    "DIEGO": "Fory",
+    "ana": "nokia2025"
+  };
 
-    <!-- FORMULARIO DE PARÁMETROS -->
-    <section id="formularios" class="card hidden">
-      <h2>🛰 Parámetros 5G</h2>
-      <form id="form5g" class="grid-form"></form>
-
-      <h2>📡 Parámetros 4G</h2>
-      <form id="form4g" class="grid-form"></form>
-
-      <button id="generarBtn" class="btn-success">⚙️ Generar XML</button>
-    </section>
-
-    <div id="resultado"></div>
-  </main>
-
-  <!-- FOOTER -->
-  <footer>
-    <p>© 2025 <span>CIRCET España</span> — Ingeniería de Red</p>
-  </footer>
-
-  <!-- Scripts -->
-  <script src="xlsx.full.min.js"></script>
-  <script type="module" src="script.js"></script>
+  // === VALIDACIÓN ===
+  if (usuariosPermitidos[usuario] && usuariosPermitidos[usuario] === contrasena) {
+    setSession(usuario);
+    window.location.href = "panelSeleccion.html";
+  } else {
+    error.style.display = "block";
+  }
+});
+  </script>
 </body>
 </html>

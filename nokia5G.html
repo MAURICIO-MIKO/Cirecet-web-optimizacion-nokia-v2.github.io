@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CIRCET · Generador XML 5G Nokia</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="logo">
+      <img src="img/logo.png" alt="CIRCET" />
+      <span>Ingeniería CIRCET</span>
+    </div>
+     <nav class="nav-actions">
+         <button id="btnAirscale" class="btn-secondary">📄 Descargar Airscale</button>
+         <a href="./comparador/" target="_blank" class="btn-secondary">📊 Comparador Excel</a>
+         <button id="btnVolver" class="btn-secondary">🔙 Atrás</button>
+     </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-box">
+      <h1>INGENIERÍA CIRCET</h1>
+      <p>Generador de Script Nokia · Solo 5G</p>
+    </div>
+  </section>
+
+  <!-- CONTENIDO -->
+  <main class="content">
+    <!-- SUBIR ARCHIVOS -->
+    <section class="card upload">
+      <h2>📂 Cargar Archivo de Entrada (5G)</h2>
+
+      <div class="form-group">
+        <label for="excelFile">Seleccionar Excel (.xls / .xlsx)</label>
+        <input type="file" id="excelFile" accept=".xls,.xlsx" />
+      </div>
+
+      <div class="form-group">
+        <label for="plantilla">Seleccionar Plantilla XML (5G)</label>
+        <select id="plantilla">
+          <option value="plantilla_NR3500.xml">Plantilla 5G</option>
+        </select>
+      </div>
+
+      <button id="leerExcelBtn" class="btn-primary">📊 Cargar Excel</button>
+    </section>
+
+    <!-- FORMULARIO DE PARÁMETROS -->
+    <section id="formularios" class="card hidden">
+      <h2>🛰 Parámetros 5G</h2>
+      <form id="form5g" class="grid-form"></form>
+      <button id="generarBtn" class="btn-success">⚙️ Generar XML 5G</button>
+    </section>
+
+    <div id="resultado"></div>
+  </main>
+
+  <!-- ======= SCRIPTS ======= -->
+  <script src="xlsx.full.min.js"></script>
+  <script type="module">
+    // === LEER EXCEL (solo hoja 5G) ===
+    document.getElementById("leerExcelBtn").addEventListener("click", () => {
+      const file = document.getElementById("excelFile").files[0];
+      if (!file) {
+        alert("Selecciona un archivo Excel primero.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: "array" });
+        const sheet5G = workbook.Sheets["5G"];
+        const form5g = document.getElementById("form5g");
+        form5g.innerHTML = "";
+
+        if (sheet5G) generarFormulario(sheet5G, form5g);
+        document.getElementById("formularios").classList.remove("hidden");
+      };
+      reader.readAsArrayBuffer(file);
+    });
+
+    // === GENERAR FORMULARIO AUTOMÁTICO ===
+    function generarFormulario(sheet, contenedor) {
+      const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+      if (data.length < 2) return;
+
+      const headers = data[0];
+      const values = data[1];
+
+      headers.forEach((campo, i) => {
+        if (!campo) return;
+        const valor = values[i] || "";
+        const div = document.createElement("div");
+        div.classList.add("form-item");
+        div.innerHTML = `
+          <label>${campo}</label>
+          <input type="text" name="${campo}" value="${valor}" />
+        `;
+        contenedor.appendChild(div);
+      });
+    }
+
+    // === GENERAR XML 5G ===
+    document.getElementById("generarBtn").addEventListener("click", async () => {
+      const plantilla = document.getElementById("plantilla").value;
+      const excel = document.getElementById("excelFile").files[0];
+      const resultado = document.getElementById("resultado");
+
+      if (!excel) {
+        alert("Debes seleccionar un archivo Excel.");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("excel", excel);
+      formData.append("plantilla", plantilla);
+
+      resultado.innerHTML = "Procesando... ⏳";
+
+      try {
+        const res = await fetch("https://nokia-backend.onrender.com/procesar5G", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (res.ok) {
+          const blob = await res.blob();
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "salida_5G.xml";
+          a.click();
+          URL.revokeObjectURL(url);
+          resultado.innerHTML = "✅ XML 5G generado correctamente.";
+        } else {
+          const errorText = await res.text();
+          resultado.innerHTML = `❌ Error al generar XML:<br>${errorText}`;
+        }
+      } catch (err) {
+        console.error(err);
+        resultado.innerHTML = "⚠️ Error de conexión con el servidor.";
+      }
+    });
+
+    // === BOTÓN VOLVER ===
+    const volverBtn = document.getElementById("btnVolver");
+    volverBtn.addEventListener("click", () => {
+      window.location.href = "nokiaMenu.html";
+    });
+
+    // === DESCARGAR AIRSCALE ===
+    document.getElementById("btnAirscale").addEventListener("click", () => {
+      const enlace = document.createElement("a");
+      enlace.href = "archivos/SBTS24R3_Airscale.html";
+      enlace.download = "SBTS24R3_Airscale.html";
+      enlace.click();
+    });
+  </script>
+</body>
+</html>

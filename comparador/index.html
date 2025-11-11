@@ -6,48 +6,169 @@
   <title>Comparador de Excel — CIRCET</title>
   <link rel="stylesheet" href="../style.css" />
   <style>
-    .grid-form {
-      display: grid;
-      gap: 1rem;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    /* === FONDO CORPORATIVO ELEGANTE === */
+    body {
+      margin: 0;
+      font-family: "Inter", "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(160deg, #fdfaf7, #f6e6d2, #f5c07a, #e67e22);
+      background-size: 400% 400%;
+      animation: fondoCIRCETsuave 18s ease infinite;
+      color: #2d3436;
+      min-height: 100vh;
+      padding: 2rem;
     }
+
+    @keyframes fondoCIRCETsuave {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* === CABECERA === */
+    .titulo-principal {
+      text-align: center;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #d97116;
+      margin-bottom: 1rem;
+      line-height: 1.3;
+      position: relative;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      animation: fadeIn 0.8s ease;
+    }
+
+    .titulo-principal::after {
+      content: "";
+      display: block;
+      width: 120px;
+      height: 4px;
+      background: linear-gradient(90deg, #e9b46a, #e67e22);
+      margin: 0.6rem auto 0;
+      border-radius: 4px;
+    }
+
+    .titulo-principal small {
+      display: block;
+      font-size: 1rem;
+      color: #555;
+      margin-top: 0.5rem;
+      font-weight: 400;
+    }
+
+    /* === CONTENEDOR PRINCIPAL === */
+    .card {
+      background: #ffffffee;
+      margin: 2rem auto;
+      padding: 2rem;
+      border-radius: 18px;
+      max-width: 900px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+      border: 1px solid #f3e5d0;
+      backdrop-filter: blur(5px);
+      animation: fadeIn 1s ease;
+    }
+
+    .form-group {
+      margin: 1rem 0;
+    }
+
+    label {
+      font-weight: 600;
+      color: #333;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      background: #fff;
+      transition: all 0.3s ease;
+    }
+
+    input[type="file"]:hover {
+      border-color: #e9b46a;
+      background-color: #fffef8;
+    }
+
+    /* === BOTÓN PRINCIPAL === */
+    .btn-primary {
+      display: inline-block;
+      background: linear-gradient(90deg, #e9b46a, #e67e22);
+      color: #fff;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(230, 126, 34, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(230, 126, 34, 0.4);
+    }
+
+    /* === RESULTADOS === */
+    #resultado {
+      margin-top: 2rem;
+      animation: fadeIn 1s ease;
+    }
+
     .form-item {
       padding: 1rem;
       border-radius: 10px;
-      background: #fafafa;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      background: #fffdfb;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      border: 1px solid #f1e4ce;
+      transition: 0.3s ease;
     }
-    input {
+
+    .form-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+    }
+
+    input[type="text"] {
       width: 100%;
-      padding: 6px;
-      border-radius: 5px;
+      padding: 8px;
+      border-radius: 6px;
       border: 1px solid #ccc;
+      background: #fff;
     }
-    p {
-      margin: 0.3rem 0;
+
+    /* === ANIMACIONES === */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
+
 <body>
-<h1 class="titulo-principal">
-  🧩 Comparador de Excel
-  <small>Encabezados · Fila 2 · Hojas 5G / 4G</small>
-</h1>
+  <h1 class="titulo-principal">
+    🧩 Comparador de Excel
+    <small>Encabezados · Fila 2 · Hojas 5G / 4G</small>
+  </h1>
 
+  <div class="card">
+    <div class="form-group">
+      <label>📘 Excel 1:</label>
+      <input type="file" id="excel1" accept=".xls,.xlsx" />
+    </div>
+    <div class="form-group">
+      <label>📗 Excel 2:</label>
+      <input type="file" id="excel2" accept=".xls,.xlsx" />
+    </div>
 
+    <button id="compararBtn" class="btn-primary">🔍 Comparar archivos</button>
 
-  <div class="form-group">
-    <label>Excel 1:</label>
-    <input type="file" id="excel1" accept=".xls,.xlsx" />
+    <div id="resultado" class="hidden"></div>
   </div>
-  <div class="form-group">
-    <label>Excel 2:</label>
-    <input type="file" id="excel2" accept=".xls,.xlsx" />
-  </div>
-
-  <button id="compararBtn" class="btn-primary">🔍 Comparar archivos</button>
-
-  <div id="resultado" class="card hidden"></div>
 
   <script src="../xlsx.full.min.js"></script>
   <script src="script.js"></script>
