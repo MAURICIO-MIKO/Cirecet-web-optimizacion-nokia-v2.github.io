@@ -39,10 +39,7 @@
       transition: all 0.2s ease-in-out;
     }
 
-    .btn-back:hover {
-      background-color: #0b3d91;
-      color: white;
-    }
+    .btn-back:hover { background-color: #0b3d91; color: white; }
 
     .btn-logout {
       position: absolute;
@@ -59,15 +56,9 @@
       transition: all 0.2s ease-in-out;
     }
 
-    .btn-logout:hover {
-      background-color: #b91c1c;
-    }
+    .btn-logout:hover { background-color: #b91c1c; }
 
-    main {
-      max-width: 900px;
-      margin: 2rem auto;
-      padding: 0 1rem;
-    }
+    main { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
 
     #buscador {
       width: 100%;
@@ -85,21 +76,27 @@
       margin-bottom: 2rem;
       padding: 1.5rem;
       transition: all 0.3s ease-in-out;
+      position: relative;
     }
 
-    section:hover {
-      transform: scale(1.01);
+    section:hover { transform: scale(1.01); }
+
+    h2 { color: #0b3d91; border-bottom: 2px solid #cbd5e1; padding-bottom: 0.5rem; }
+
+    .btn-delete {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background-color: #dc2626;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.3rem 0.7rem;
+      cursor: pointer;
+      display: none;
     }
 
-    h2 {
-      color: #0b3d91;
-      border-bottom: 2px solid #cbd5e1;
-      padding-bottom: 0.5rem;
-    }
-
-    p {
-      line-height: 1.6;
-    }
+    .btn-delete:hover { background-color: #991b1b; }
 
     footer {
       background: #0b3d91;
@@ -112,9 +109,7 @@
       width: 100%;
     }
 
-    .add-section {
-      background-color: #2563eb;
-      color: white;
+    .add-section, .btn-import, .btn-update {
       padding: 0.8rem 1.2rem;
       border: none;
       border-radius: 8px;
@@ -122,11 +117,17 @@
       font-weight: bold;
       display: block;
       margin: 1rem auto;
+      color: white;
     }
 
-    .add-section:hover {
-      background-color: #1e40af;
-    }
+    .add-section { background-color: #2563eb; }
+    .add-section:hover { background-color: #1e40af; }
+
+    .btn-import { background-color: #16a34a; }
+    .btn-import:hover { background-color: #15803d; }
+
+    .btn-update { background-color: #f59e0b; }
+    .btn-update:hover { background-color: #d97706; }
 
     textarea {
       width: 100%;
@@ -167,36 +168,13 @@
       font-weight: bold;
     }
 
-    #login-box button:hover {
-      background-color: #1e40af;
-    }
+    #login-box button:hover { background-color: #1e40af; }
 
-    .empty {
-      text-align: center;
-      color: #64748b;
-      font-style: italic;
-    }
+    .empty { text-align: center; color: #64748b; font-style: italic; }
 
-    /* 🆕 Botón importar Word */
-    #fileWord {
-      display: none;
-    }
+    #fileWord, #fileWordUpdate { display: none; }
 
-    .btn-import {
-      background-color: #16a34a;
-      color: white;
-      padding: 0.8rem 1.2rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      display: block;
-      margin: 1rem auto;
-    }
-
-    .btn-import:hover {
-      background-color: #15803d;
-    }
+    mark { background: #ffeb3b; padding: 0 3px; border-radius: 3px; }
   </style>
 </head>
 
@@ -217,31 +195,17 @@
     </div>
 
     <div id="contenido" style="display:none;">
-      <input type="text" id="buscador" placeholder="🔍 Buscar por palabra clave...">
-
-      <section>
-        <h2>Introducción</h2>
-        <p>Este manual recopila explicaciones, instrucciones y procedimientos para el uso de la herramienta Nokia de generación de XMLs y automatización de procesos.</p>
-      </section>
-
-      <section>
-        <h2>Sección 1: Configuración Inicial</h2>
-        <p>Explica cómo subir archivos Excel y plantillas XML, cómo ejecutar el backend en Render y cómo conectarlo con el frontend en GitHub Pages.</p>
-      </section>
-
-      <section>
-        <h2>Sección 2: Generación de XMLs</h2>
-        <p>Detalla el proceso de carga de datos 5G, validación de celdas y creación del archivo <strong>salida.xml</strong>. Aquí puedes incluir ejemplos y capturas.</p>
-      </section>
+      <input type="text" id="buscador" placeholder="🔍 Buscar palabra o frase...">
 
       <div id="contenedor-secciones"></div>
       <p id="sinResultados" class="empty" style="display:none;">🔎 No se encontraron resultados.</p>
 
       <button id="btn-add" class="add-section" style="display:none;" onclick="agregarSeccion()">➕ Añadir nueva sección</button>
+      <input type="file" id="fileWord" accept=".docx" onchange="subirWord(this.files[0], false)" />
+      <input type="file" id="fileWordUpdate" accept=".docx" onchange="subirWord(this.files[0], true)" />
 
-      <!-- 🆕 Botón para importar Word -->
-      <input type="file" id="fileWord" accept=".docx" onchange="subirWord(this.files[0])" />
       <button id="btnImportWord" class="btn-import" style="display:none;" onclick="document.getElementById('fileWord').click()">📄 Importar desde Word (.docx)</button>
+      <button id="btnUpdateWord" class="btn-update" style="display:none;" onclick="document.getElementById('fileWordUpdate').click()">🔁 Actualizar con nuevo Word</button>
     </div>
   </main>
 
@@ -252,18 +216,15 @@
   <script>
     const ADMIN_USER = "admin";
     const ADMIN_PASS = "Miko";
-   const BACKEND_URL = "https://nokia-backend.onrender.com";
+    const BACKEND_URL = "https://nokia-backend.onrender.com";
 
     window.addEventListener("DOMContentLoaded", () => {
       const contenedor = document.getElementById("contenedor-secciones");
       const guardado = localStorage.getItem("manual_nokia");
       if (guardado) contenedor.innerHTML = guardado;
-
-      if (localStorage.getItem("admin_autenticado") === "true") {
-        mostrarModoAdmin();
-      } else {
-        mostrarModoLectura();
-      }
+      actualizarBotonesEliminar();
+      if (localStorage.getItem("admin_autenticado") === "true") mostrarModoAdmin();
+      else mostrarModoLectura();
     });
 
     function mostrarModoLectura() {
@@ -272,7 +233,9 @@
       document.getElementById("btn-add").style.display = "none";
       document.getElementById("btnLogout").style.display = "none";
       document.getElementById("btnImportWord").style.display = "none";
+      document.getElementById("btnUpdateWord").style.display = "none";
       document.querySelectorAll("textarea").forEach(t => t.disabled = true);
+      document.querySelectorAll(".btn-delete").forEach(b => b.style.display = "none");
     }
 
     function mostrarModoAdmin() {
@@ -281,7 +244,9 @@
       document.getElementById("btn-add").style.display = "block";
       document.getElementById("btnLogout").style.display = "inline-block";
       document.getElementById("btnImportWord").style.display = "block";
+      document.getElementById("btnUpdateWord").style.display = "block";
       document.querySelectorAll("textarea").forEach(t => t.disabled = false);
+      document.querySelectorAll(".btn-delete").forEach(b => b.style.display = "block");
     }
 
     function verificarLogin() {
@@ -292,9 +257,7 @@
       if (user === ADMIN_USER && pass === ADMIN_PASS) {
         localStorage.setItem("admin_autenticado", "true");
         mostrarModoAdmin();
-      } else {
-        msg.textContent = "Usuario o contraseña incorrectos ❌";
-      }
+      } else msg.textContent = "Usuario o contraseña incorrectos ❌";
     }
 
     function cerrarSesion() {
@@ -305,10 +268,33 @@
     function agregarSeccion() {
       const contenedor = document.getElementById("contenedor-secciones");
       const nueva = document.createElement("section");
-      nueva.innerHTML = `<h2 contenteditable="true">📝 Nueva Sección</h2><textarea placeholder="Escribe aquí la explicación o pega contenido técnico..."></textarea>`;
+      nueva.innerHTML = `<button class='btn-delete' onclick='eliminarSeccion(this.parentElement)'>🗑</button>
+      <h2 contenteditable='true'>📝 Nueva Sección</h2>
+      <textarea placeholder='Escribe aquí la explicación o pega contenido técnico...'></textarea>`;
       contenedor.appendChild(nueva);
+      actualizarBotonesEliminar();
       guardarContenido();
       nueva.scrollIntoView({ behavior: "smooth" });
+    }
+
+    function eliminarSeccion(seccion) {
+      if (confirm("¿Seguro que deseas eliminar esta sección?")) {
+        seccion.remove();
+        guardarContenido();
+      }
+    }
+
+    function actualizarBotonesEliminar() {
+      const contenedor = document.getElementById("contenedor-secciones");
+      contenedor.querySelectorAll("section").forEach(sec => {
+        if (!sec.querySelector(".btn-delete")) {
+          const btn = document.createElement("button");
+          btn.className = "btn-delete";
+          btn.textContent = "🗑";
+          btn.onclick = () => eliminarSeccion(sec);
+          sec.appendChild(btn);
+        }
+      });
     }
 
     document.addEventListener("input", guardarContenido);
@@ -317,38 +303,56 @@
       localStorage.setItem("manual_nokia", contenedor.innerHTML);
     }
 
+    // 🔍 Buscador avanzado: resalta y salta a coincidencias
     document.getElementById("buscador").addEventListener("input", e => {
-      const texto = e.target.value.toLowerCase();
-      const secciones = document.querySelectorAll("section");
+      const texto = e.target.value.toLowerCase().trim();
+      const contenedor = document.getElementById("contenedor-secciones");
+      const secciones = contenedor.querySelectorAll("section");
+      let firstMatch = null;
+
+      // eliminar resaltados anteriores
+      contenedor.querySelectorAll("mark").forEach(m => {
+        const parent = m.parentNode;
+        parent.replaceChild(document.createTextNode(m.textContent), m);
+      });
+
       let visibles = 0;
       secciones.forEach(sec => {
-        const contenido = sec.innerText.toLowerCase();
-        sec.style.display = contenido.includes(texto) ? "block" : "none";
-        if (contenido.includes(texto)) visibles++;
+        const htmlOriginal = sec.innerHTML.replace(/<mark>(.*?)<\/mark>/g, "$1");
+        if (texto && htmlOriginal.toLowerCase().includes(texto)) {
+          sec.innerHTML = htmlOriginal.replace(new RegExp(texto, "gi"), match => `<mark>${match}</mark>`);
+          if (!firstMatch) firstMatch = sec.querySelector("mark");
+          sec.style.display = "block";
+          visibles++;
+        } else if (texto === "") {
+          sec.innerHTML = htmlOriginal;
+          sec.style.display = "block";
+          visibles++;
+        } else {
+          sec.style.display = "none";
+        }
       });
+
+      if (firstMatch) firstMatch.scrollIntoView({ behavior: "smooth", block: "center" });
       document.getElementById("sinResultados").style.display = visibles === 0 ? "block" : "none";
     });
 
-    // 🆕 Subir y convertir Word a HTML
-    async function subirWord(archivo) {
+    // 🔁 Subir o actualizar Word
+    async function subirWord(archivo, actualizar = false) {
       if (!archivo) return;
       const formData = new FormData();
       formData.append("archivo", archivo);
       try {
-        const resp = await fetch(`${BACKEND_URL}/convertirWordManual`, {
-          method: "POST",
-          body: formData
-        });
+        const resp = await fetch(`${BACKEND_URL}/convertirWordManual`, { method: "POST", body: formData });
         const data = await resp.json();
         if (data.html) {
           document.getElementById("contenedor-secciones").innerHTML = data.html;
+          actualizarBotonesEliminar();
           guardarContenido();
-          alert("✅ Documento Word importado correctamente.");
-        } else {
-          alert("❌ Error: " + data.error);
-        }
+          alert(actualizar ? "🔁 Manual actualizado correctamente." : "✅ Documento Word importado correctamente.");
+        } else alert("❌ Error: " + data.error);
       } catch (err) {
-        alert("⚠️ No se pudo importar el documento Word.");
+        alert("⚠️ No se pudo procesar el documento Word.");
         console.error(err);
       }
     }
