@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manual del Usuario - Herramienta Nokia</title>
+  <link rel="icon" type="image/png" href="img/nokia_icon.png" />
+
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8fafc;
+      color: #1e293b;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #0b3d91;
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: bold;
+      position: relative;
+    }
+
+    .btn-back {
+      position: absolute;
+      left: 1rem;
+      top: 1.2rem;
+      background-color: white;
+      color: #0b3d91;
+      border: 2px solid #0b3d91;
+      border-radius: 6px;
+      padding: 0.5rem 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .btn-back:hover {
+      background-color: #0b3d91;
+      color: white;
+    }
+
+    .btn-logout {
+      position: absolute;
+      right: 1rem;
+      top: 1.2rem;
+      background-color: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 0.5rem 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      display: none;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .btn-logout:hover {
+      background-color: #b91c1c;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    #buscador {
+      width: 100%;
+      padding: 0.7rem;
+      border: 2px solid #0b3d91;
+      border-radius: 10px;
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    section {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      transition: all 0.3s ease-in-out;
+    }
+
+    section:hover {
+      transform: scale(1.01);
+    }
+
+    h2 {
+      color: #0b3d91;
+      border-bottom: 2px solid #cbd5e1;
+      padding-bottom: 0.5rem;
+    }
+
+    p {
+      line-height: 1.6;
+    }
+
+    footer {
+      background: #0b3d91;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      position: relative;
+      bottom: 0;
+      width: 100%;
+    }
+
+    .add-section {
+      background-color: #2563eb;
+      color: white;
+      padding: 0.8rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      display: block;
+      margin: 1rem auto;
+    }
+
+    .add-section:hover {
+      background-color: #1e40af;
+    }
+
+    textarea {
+      width: 100%;
+      height: 120px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      padding: 10px;
+      font-family: inherit;
+      resize: vertical;
+    }
+
+    #login-box {
+      max-width: 350px;
+      margin: 40px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    #login-box input {
+      width: 90%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+    }
+
+    #login-box button {
+      background-color: #0b3d91;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    #login-box button:hover {
+      background-color: #1e40af;
+    }
+
+    .empty {
+      text-align: center;
+      color: #64748b;
+      font-style: italic;
+    }
+
+    /* 🆕 Botón importar Word */
+    #fileWord {
+      display: none;
+    }
+
+    .btn-import {
+      background-color: #16a34a;
+      color: white;
+      padding: 0.8rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      display: block;
+      margin: 1rem auto;
+    }
+
+    .btn-import:hover {
+      background-color: #15803d;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <button class="btn-back" onclick="window.location.href='index.html'">⬅ Atrás</button>
+    <button id="btnLogout" class="btn-logout" onclick="cerrarSesion()">Cerrar sesión</button>
+    📘 Manual del Usuario - Herramienta Nokia
+  </header>
+
+  <main>
+    <div id="login-box">
+      <h3>Acceso Administrador</h3>
+      <input type="text" id="usuario" placeholder="Usuario" />
+      <input type="password" id="contrasena" placeholder="Contraseña" />
+      <button onclick="verificarLogin()">Entrar</button>
+      <p id="mensaje" style="color: red;"></p>
+    </div>
+
+    <div id="contenido" style="display:none;">
+      <input type="text" id="buscador" placeholder="🔍 Buscar por palabra clave...">
+
+      <section>
+        <h2>Introducción</h2>
+        <p>Este manual recopila explicaciones, instrucciones y procedimientos para el uso de la herramienta Nokia de generación de XMLs y automatización de procesos.</p>
+      </section>
+
+      <section>
+        <h2>Sección 1: Configuración Inicial</h2>
+        <p>Explica cómo subir archivos Excel y plantillas XML, cómo ejecutar el backend en Render y cómo conectarlo con el frontend en GitHub Pages.</p>
+      </section>
+
+      <section>
+        <h2>Sección 2: Generación de XMLs</h2>
+        <p>Detalla el proceso de carga de datos 5G, validación de celdas y creación del archivo <strong>salida.xml</strong>. Aquí puedes incluir ejemplos y capturas.</p>
+      </section>
+
+      <div id="contenedor-secciones"></div>
+      <p id="sinResultados" class="empty" style="display:none;">🔎 No se encontraron resultados.</p>
+
+      <button id="btn-add" class="add-section" style="display:none;" onclick="agregarSeccion()">➕ Añadir nueva sección</button>
+
+      <!-- 🆕 Botón para importar Word -->
+      <input type="file" id="fileWord" accept=".docx" onchange="subirWord(this.files[0])" />
+      <button id="btnImportWord" class="btn-import" style="display:none;" onclick="document.getElementById('fileWord').click()">📄 Importar desde Word (.docx)</button>
+    </div>
+  </main>
+
+  <footer>
+    Herramienta Nokia © 2025 — Documentación interna. Todos los derechos reservados.
+  </footer>
+
+  <script>
+    const ADMIN_USER = "admin";
+    const ADMIN_PASS = "Miko";
+   const BACKEND_URL = "https://herramienta-nokia-backend.onrender.com";
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const contenedor = document.getElementById("contenedor-secciones");
+      const guardado = localStorage.getItem("manual_nokia");
+      if (guardado) contenedor.innerHTML = guardado;
+
+      if (localStorage.getItem("admin_autenticado") === "true") {
+        mostrarModoAdmin();
+      } else {
+        mostrarModoLectura();
+      }
+    });
+
+    function mostrarModoLectura() {
+      document.getElementById("login-box").style.display = "block";
+      document.getElementById("contenido").style.display = "block";
+      document.getElementById("btn-add").style.display = "none";
+      document.getElementById("btnLogout").style.display = "none";
+      document.getElementById("btnImportWord").style.display = "none";
+      document.querySelectorAll("textarea").forEach(t => t.disabled = true);
+    }
+
+    function mostrarModoAdmin() {
+      document.getElementById("login-box").style.display = "none";
+      document.getElementById("contenido").style.display = "block";
+      document.getElementById("btn-add").style.display = "block";
+      document.getElementById("btnLogout").style.display = "inline-block";
+      document.getElementById("btnImportWord").style.display = "block";
+      document.querySelectorAll("textarea").forEach(t => t.disabled = false);
+    }
+
+    function verificarLogin() {
+      const user = document.getElementById("usuario").value.trim();
+      const pass = document.getElementById("contrasena").value.trim();
+      const msg = document.getElementById("mensaje");
+
+      if (user === ADMIN_USER && pass === ADMIN_PASS) {
+        localStorage.setItem("admin_autenticado", "true");
+        mostrarModoAdmin();
+      } else {
+        msg.textContent = "Usuario o contraseña incorrectos ❌";
+      }
+    }
+
+    function cerrarSesion() {
+      localStorage.removeItem("admin_autenticado");
+      mostrarModoLectura();
+    }
+
+    function agregarSeccion() {
+      const contenedor = document.getElementById("contenedor-secciones");
+      const nueva = document.createElement("section");
+      nueva.innerHTML = `<h2 contenteditable="true">📝 Nueva Sección</h2><textarea placeholder="Escribe aquí la explicación o pega contenido técnico..."></textarea>`;
+      contenedor.appendChild(nueva);
+      guardarContenido();
+      nueva.scrollIntoView({ behavior: "smooth" });
+    }
+
+    document.addEventListener("input", guardarContenido);
+    function guardarContenido() {
+      const contenedor = document.getElementById("contenedor-secciones");
+      localStorage.setItem("manual_nokia", contenedor.innerHTML);
+    }
+
+    document.getElementById("buscador").addEventListener("input", e => {
+      const texto = e.target.value.toLowerCase();
+      const secciones = document.querySelectorAll("section");
+      let visibles = 0;
+      secciones.forEach(sec => {
+        const contenido = sec.innerText.toLowerCase();
+        sec.style.display = contenido.includes(texto) ? "block" : "none";
+        if (contenido.includes(texto)) visibles++;
+      });
+      document.getElementById("sinResultados").style.display = visibles === 0 ? "block" : "none";
+    });
+
+    // 🆕 Subir y convertir Word a HTML
+    async function subirWord(archivo) {
+      if (!archivo) return;
+      const formData = new FormData();
+      formData.append("archivo", archivo);
+      try {
+        const resp = await fetch(`${BACKEND_URL}/convertirWordManual`, {
+          method: "POST",
+          body: formData
+        });
+        const data = await resp.json();
+        if (data.html) {
+          document.getElementById("contenedor-secciones").innerHTML = data.html;
+          guardarContenido();
+          alert("✅ Documento Word importado correctamente.");
+        } else {
+          alert("❌ Error: " + data.error);
+        }
+      } catch (err) {
+        alert("⚠️ No se pudo importar el documento Word.");
+        console.error(err);
+      }
+    }
+  </script>
+</body>
+</html>
