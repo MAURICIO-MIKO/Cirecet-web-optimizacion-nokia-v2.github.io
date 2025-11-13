@@ -173,8 +173,6 @@
     .empty { text-align: center; color: #64748b; font-style: italic; }
 
     #fileWord, #fileWordUpdate { display: none; }
-
-    mark { background: #ffeb3b; padding: 0 3px; border-radius: 3px; }
   </style>
 </head>
 
@@ -216,7 +214,9 @@
   <script>
     const ADMIN_USER = "admin";
     const ADMIN_PASS = "Miko";
-    const BACKEND_URL = "https://nokia-backend.onrender.com";
+    const BACKEND_URL = window.location.hostname.includes("localhost")
+      ? "http://127.0.0.1:8000"
+      : "https://nokia-backend.onrender.com";
 
     window.addEventListener("DOMContentLoaded", () => {
       const contenedor = document.getElementById("contenedor-secciones");
@@ -297,44 +297,40 @@
       });
     }
 
-    document.addEventListener("input", guardarContenido);
+    document.getElementById("contenedor-secciones").addEventListener("input", guardarContenido);
     function guardarContenido() {
       const contenedor = document.getElementById("contenedor-secciones");
       localStorage.setItem("manual_nokia", contenedor.innerHTML);
     }
 
-    // 🔍 Buscador avanzado: resalta y salta a coincidencias
-    document.getElementById("buscador").addEventListener("input", e => {
+    // 🔍 Buscador seguro
+    const buscador = document.getElementById("buscador");
+    const sinResultados = document.getElementById("sinResultados");
+
+    buscador.addEventListener("input", e => {
       const texto = e.target.value.toLowerCase().trim();
-      const contenedor = document.getElementById("contenedor-secciones");
-      const secciones = contenedor.querySelectorAll("section");
-      let firstMatch = null;
-
-      // eliminar resaltados anteriores
-      contenedor.querySelectorAll("mark").forEach(m => {
-        const parent = m.parentNode;
-        parent.replaceChild(document.createTextNode(m.textContent), m);
-      });
-
+      const secciones = document.querySelectorAll("#contenedor-secciones section");
       let visibles = 0;
+
       secciones.forEach(sec => {
-        const htmlOriginal = sec.innerHTML.replace(/<mark>(.*?)<\/mark>/g, "$1");
-        if (texto && htmlOriginal.toLowerCase().includes(texto)) {
-          sec.innerHTML = htmlOriginal.replace(new RegExp(texto, "gi"), match => `<mark>${match}</mark>`);
-          if (!firstMatch) firstMatch = sec.querySelector("mark");
+        const textoPlano = sec.textContent.toLowerCase();
+        if (texto === "") {
           sec.style.display = "block";
-          visibles++;
-        } else if (texto === "") {
-          sec.innerHTML = htmlOriginal;
+          sec.style.backgroundColor = "";
+          sec.style.outline = "";
+          return;
+        }
+
+        if (textoPlano.includes(texto)) {
           sec.style.display = "block";
+          sec.style.outline = "3px solid #ffcc00";
+          sec.style.backgroundColor = "#fff9c4";
           visibles++;
         } else {
           sec.style.display = "none";
         }
       });
-
-      if (firstMatch) firstMatch.scrollIntoView({ behavior: "smooth", block: "center" });
-      document.getElementById("sinResultados").style.display = visibles === 0 ? "block" : "none";
+      sinResultados.style.display = visibles === 0 && texto ? "block" : "none";
     });
 
     // 🔁 Subir o actualizar Word
