@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador Planned RNC – Nokia</title>
+
+    <!-- Estilo premium CIRCET -->
+    <link rel="stylesheet" href="styles/estilo.css">
+
+    <!-- Librería XLSX -->
+    <script src="../xlsx.full.min.js"></script>
+
+    <!-- Estilos generales (navbar) -->
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<!-- ==== NAVBAR ELEGANTE ==== -->
+<header class="navbar">
+    <div class="logo">
+        <img src="../img/logo.png" alt="Logo" />
+        <span>Generadores XML/MOS Nokia</span>
+    </div>
+
+    <div class="nav-actions">
+        <!-- BOTÓN ATRÁS -->
+        <button class="btn-secondary" onclick="window.history.back()">⬅️ Atrás</button>
+
+        <!-- MANUAL -->
+        <a href="../manualUsuarioNokia.html">
+            <button class="btn-secondary">📘 Manual</button>
+        </a>
+    </div>
+</header>
+
+<!-- ======================== -->
+<!-- AREA DE CONTENIDO BONITA -->
+<!-- ======================== -->
+
+<div id="contenido">
+
+    <!-- Título -->
+    <h2>🔷 Planned RNC (3G)</h2>
+    <h3>🔍 Vista Interactiva del Sitio</h3>
+
+    <!-- AQUI SE DIBUJA EL DIAGRAMA -->
+    <div id="rncDiagramContainer"></div>
+
+    <p>Generador automático de configuraciones planificadas para RNC de Nokia.</p>
+    <hr>
+
+    <!-- PASO 1 -->
+    <div class="bloque">
+        <h3>1️⃣ Selecciona plantilla Excel</h3>
+        <input type="file" id="fileInput" />
+        <button id="readButton" onclick="leerFichero()">Leer Archivo</button>
+
+        <p style="margin-top:10px;">Ficheros de ejemplo:</p>
+        <ul>
+            <li><a href="./scripts/ejemplo1.xls">Ejemplo 1</a></li>
+            <li><a href="./scripts/ejemplo2.xls">Ejemplo 2</a></li>
+        </ul>
+    </div>
+
+    <!-- PASO 2 -->
+    <div class="bloque">
+        <h3>2️⃣ Verifica campos leídos</h3>
+
+        <form id="dataForm">
+
+            <div>
+                <label for="ipnb_id">IPNB ID:</label>
+                <input type="text" id="ipnb_id" required>
+            </div>
+
+            <div>
+                <label for="vrf_cp">VRF CP:</label>
+                <input type="text" id="vrf_cp" required>
+            </div>
+
+            <div>
+                <label for="vrf_up">VRF UP:</label>
+                <input type="text" id="vrf_up">
+            </div>
+
+            <div>
+                <label for="wbtsname">WBTS Name:</label>
+                <input type="text" id="wbtsname" required>
+            </div>
+
+            <div>
+                <label for="qnup_id">QNUP ID:</label>
+                <input type="text" id="qnup_id" required>
+            </div>
+
+            <div>
+                <label for="rnc_ip_address">RNC IP Address:</label>
+                <input type="text" id="rnc_ip_address" required>
+            </div>
+
+            <div>
+                <label for="nb_ip_servicio">NB IP Servicio:</label>
+                <input type="text" id="nb_ip_servicio" required>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- PASO 3 -->
+    <div class="bloque">
+        <h3>3️⃣ Generar y descargar</h3>
+
+        <button id="generarSalida" onclick="generarSalida()">Generar Salida</button>
+        <button id="descargar" onclick="descargarContenido()">Descargar</button>
+
+        <pre id="myPre">Aquí aparecerá tu configuración generada…</pre>
+    </div>
+
+</div>
+
+
+<!-- ==== SCRIPTS (DEBEN ESTAR AL FINAL) ==== -->
+
+<!-- Navbar -->
+<script src="../script.js"></script>
+
+<!-- Lógica del generador + dibujo SVG -->
+<script src="scripts/main.js"></script>
+
+</body>
+</html>

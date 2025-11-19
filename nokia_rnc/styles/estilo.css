@@ -1,0 +1,184 @@
+/* === GENERAL CIRCET === */
+body {
+  margin: 0;
+  font-family: "Inter", "Segoe UI", Arial, sans-serif;
+  color: #2d3436;
+  line-height: 1.6;
+  background: linear-gradient(160deg, #fdfaf7, #f6e6d2, #f5c07a, #e67e22);
+  background-size: 400% 400%;
+  animation: fondoCIRCETsuave 18s ease infinite;
+  min-height: 100vh;
+  padding: 2rem 0;
+}
+
+@keyframes fondoCIRCETsuave {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* === CONTENEDOR CENTRAL ELEGANTE (1100px) === */
+#contenido {
+  background: #ffffffdd;
+  width: 92%;
+  max-width: 1100px;      /* AQUI EL NUEVO ANCHO ELEGANTE */
+  margin: 2rem auto;      /* Más aire vertical */
+  padding: 2.5rem 3rem;
+  border-radius: 22px;    /* Más redondeado = más premium */
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(10px);
+  border: 1px solid #f4e1c7;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#contenido:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.22);
+}
+
+
+
+h2, h3, h4 {
+  color: #d97116;
+  font-weight: 700;
+  margin-bottom: 0.7rem;
+}
+
+/* === FORMULARIOS CIRCET PRO === */
+form label {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 0.92rem;
+  margin-bottom: 0.3rem;
+  display: block;
+}
+
+form div {
+  margin-top: 14px;
+  background: #ffffffee;
+  border: 1px solid #ebebeb;
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+  transition: all 0.25s ease-in-out;
+}
+
+form div:hover {
+  border-color: #e69f3c;
+  box-shadow: 0 5px 18px rgba(230, 159, 60, 0.20);
+  transform: translateY(-3px);
+}
+
+form input {
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background: #fff;
+  font-size: 0.95rem;
+  color: #2c3e50;
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+form input:focus {
+  border-color: #e67e22;
+  box-shadow: 0 0 6px rgba(230, 159, 60, 0.35);
+}
+
+/* === INPUT FILE === */
+input[type="file"] {
+  padding: 10px;
+  border-radius: 8px;
+  background: #ffffffcc;
+  border: 1px solid #d9d9d9;
+  transition: 0.25s;
+}
+
+input[type="file"]:hover {
+  border-color: #e67e22;
+}
+
+/* === BOTONES === */
+button {
+  background: linear-gradient(90deg, #e67e22, #e67e22);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 18px;
+  cursor: pointer;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  transition: all 0.25s ease-in-out;
+  box-shadow: 0 4px 12px rgba(230, 126, 34, 0.25);
+  margin-right: 10px;
+  margin-top: 10px;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(230, 159, 60, 0.35);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* === CAJA <pre> ELEGANTE === */
+pre {
+  background: #fff7ecdd;
+  padding: 1rem;
+  border-radius: 12px;
+  border: 2px solid #e69f3c;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  font-family: "Consolas", "Courier New", monospace;
+  overflow-x: auto;
+  max-height: 500px;
+}
+
+/* === LISTA DE EJEMPLOS === */
+ul li a {
+  color: #d97116;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+ul li a:hover {
+  text-decoration: underline;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  #contenido {
+    padding: 1.5rem;
+  }
+
+  button {
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  form div {
+    padding: 1rem;
+  }
+}
+
+#rncDiagramContainer {
+    margin-top: 20px;
+    padding: 20px;
+    background: #ffffffdd;
+    border: 1px solid #e0d6c5;
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    backdrop-filter: blur(6px);
+}
+
+.rncLabel {
+    font-weight: 600;
+    fill: #2c3e50;
+}
+
+.nodeLabel {
+    font-size: 12px;
+    fill: #2c3e50;
+}
