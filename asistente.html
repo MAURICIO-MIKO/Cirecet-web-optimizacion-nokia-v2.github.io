@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<title>Asistente Legend — Borrar 3G</title>
+<style>
+body { font-family: Arial; background: #ffe9cc; padding:20px; }
+.box { background:white; padding:20px; border-radius:10px; }
+button { padding:10px 20px; background:#ff8a33; color:white; border:none; border-radius:6px; cursor:pointer; }
+button:hover { background:#ffa559; }
+</style>
+</head>
+
+<body>
+
+<h2>🧠 Legend Assistant — Borrar celda 3G del sector 3</h2>
+
+<div class="box">
+
+    <label><b>Sube XML:</b></label><br>
+    <input type="file" id="xmlFile" accept=".xml"><br><br>
+
+    <textarea id="pregunta" rows="3" style="width:100%;" placeholder="Ej: borrar celda del sector 3 celda 3G"></textarea><br><br>
+
+    <button onclick="procesar()">Ejecutar orden</button>
+
+    <div id="respuesta" style="margin-top:20px;"></div>
+
+</div>
+
+<script>
+let xmlTexto = "";
+
+document.getElementById("xmlFile").addEventListener("change", function() {
+    let reader = new FileReader();
+    reader.onload = e => xmlTexto = e.target.result;
+    reader.readAsText(this.files[0]);
+});
+
+/* =========================================================
+   1) DETECTAR INTENCIÓN DEL USUARIO
+   ========================================================= */
+function procesar() {
+    const pregunta = document.getElementById("pregunta").value.toLowerCase();
+
+    if (!xmlTexto) {
+        alert("Primero sube un XML.");
+        return;
+    }
+
+    if (
+        pregunta.includes("borrar") &&
+        pregunta.includes("sector 3") &&
+        pregunta.includes("3g")
+    ) {
+        borrarSector3_3G();
+        return;
+    }
+
+    document.getElementById("respuesta").innerHTML =
+        "<b>❌ Orden no reconocida.</b>";
+}
+
+/* =========================================================
+   2) EXTRAER EL ID A BORRAR → último p de wncelIdList
+   ========================================================= */
+function extraerUltimoWNCEL_ID(xmlText) {
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+
+    const lista = xmlDoc.querySelector("managedObject[class='com.nokia.srbts.wcdma:WNCELG'] list[name='wncelIdList']");
+    if (!lista) return null;
+
+    const items = lista.querySelectorAll("p");
+    if (items.length === 0) return null;
+
+    return items[items.length - 1].textContent.trim();
+}
+
+/* =========================================================
+   3) LLAMAR BACKEND /borrarWNCELG
+   ========================================================= */
+async function borrarSector3_3G() {
+    const id = extraerUltimoWNCEL_ID(xmlTexto);
+
+    if (!id) {
+        document.getElementById("respuesta").innerHTML =
+            "<b>❌ No se encontró ningún ID dentro de wncelIdList.</b>";
+        return;
+    }
+
+    let form = new FormData();
+    form.append("xml_file", new Blob([xmlTexto], { type: "text/xml" }), "entrada.xml");
+    form.append("wncel_id", id);
+
+    const API_URL = "https://tuservidor.onrender.com/borrarWNCELG";
+
+    const resp = await fetch(API_URL, {
+        method: "POST",
+        body: form
+    });
+
+    if (!resp.ok) {
+        document.getElementById("respuesta").innerHTML =
+            "<b>❌ Error: no se pudo eliminar el ID " + id + "</b>";
+        return;
+    }
+
+    const blob = await resp.blob();
+    const url = URL.createObjectURL(blob);
+
+    document.getElementById("respuesta").innerHTML = `
+        <b>✔ Celda 3G del sector 3 eliminada correctamente.</b><br><br>
+        <a href="${url}" download="XML_modificado.xml">
+            <button>📥 Descargar XML modificado</button>
+        </a>
+    `;
+}
+</script>
+
+</body>
+</html>
