@@ -1,120 +1,215 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<title>Asistente Legend — Borrar 3G</title>
+    <meta charset="UTF-8">
+    <title>Asistente Legend</title>
+
 <style>
-body { font-family: Arial; background: #ffe9cc; padding:20px; }
-.box { background:white; padding:20px; border-radius:10px; }
-button { padding:10px 20px; background:#ff8a33; color:white; border:none; border-radius:6px; cursor:pointer; }
-button:hover { background:#ffa559; }
+    body {
+        font-family: Arial;
+        background: #ffe9cc;
+        margin: 0;
+        padding: 0;
+    }
+
+    .navbar {
+        background: linear-gradient(90deg, #ff7f00, #ff9e42);
+        color: white;
+        padding: 15px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.20);
+    }
+
+    .navbar .logo {
+        font-size: 1.4rem;
+        font-weight: 700;
+    }
+
+    .navbar .nav-actions button {
+        background: rgba(255,255,255,0.2);
+        border: none;
+        padding: 10px 15px;
+        margin-left: 8px;
+        border-radius: 8px;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.25s;
+    }
+
+    .navbar .nav-actions button:hover {
+        background: rgba(255,255,255,0.35);
+    }
+
+    .navbar .nav-actions button.active {
+        background: white;
+        color: #ff7f00;
+    }
+
+    .container {
+        padding: 2rem;
+        text-align: center;
+        max-width: 1000px;
+        margin: auto;
+    }
+
+    .legend-analyzer {
+        background: #fff7ee;
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-top: 2rem;
+        border: 1px solid #ffd6a0;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: left;
+    }
+
+    .legend-response-bubble {
+        margin-top: 1rem;
+        background: white;
+        border: 2px solid #ffa54a;
+        border-radius: 10px;
+        padding: 12px;
+        font-size: 0.95rem;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+        position: relative;
+        text-align: left;
+    }
+    .legend-response-bubble::after {
+        content: "";
+        position: absolute;
+        top: -15px;
+        left: 20px;
+        border-width: 15px;
+        border-style: solid;
+        border-color: transparent transparent #ffa54a transparent;
+    }
+
+    .legend-analyzer textarea {
+        width: 100%;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        padding: 8px;
+    }
+
+    button {
+        padding: 10px 20px;
+        background: #ff7f00;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        margin-top: 10px;
+    }
 </style>
 </head>
 
 <body>
 
-<h2>🧠 Legend Assistant — Borrar celda 3G del sector 3</h2>
+<header class="navbar">
+    <div class="logo">🤖 Legend Assistant</div>
 
-<div class="box">
+    <div class="nav-actions">
+        <button onclick="window.location.href='panelSeleccion.html'">🏠 Inicio</button>
+        <button onclick="window.location.href='manualUsuarioNokia.html'">📘 Manual</button>
+        <button class="active">🤖 Asistente</button>
+        <button onclick="window.history.back()">⬅️ Atrás</button>
+    </div>
+</header>
 
-    <label><b>Sube XML:</b></label><br>
-    <input type="file" id="xmlFile" accept=".xml"><br><br>
+<div class="container">
 
-    <textarea id="pregunta" rows="3" style="width:100%;" placeholder="Ej: borrar celda del sector 3 celda 3G"></textarea><br><br>
+<h1>🧠 Legend — Modo Asistente Avanzado</h1>
+<p>Sube tu XML y pregúntame algo.</p>
 
-    <button onclick="procesar()">Ejecutar orden</button>
+<div class="legend-analyzer">
 
-    <div id="respuesta" style="margin-top:20px;"></div>
+    <h3>🔍 Analizador + Comandos Inteligentes</h3>
 
+    <label><b>📄 Cargar XML:</b></label><br>
+    <input type="file" id="xmlInput" accept=".xml"><br><br>
+
+    <textarea id="userQuestion" placeholder="Ejemplo: borrar celda del sector 3 celda 3G" rows="3"></textarea><br>
+
+    <button onclick="procesarPregunta()">Preguntar a Legend</button>
+
+    <div id="legendResponse"></div>
+
+</div>
 </div>
 
 <script>
-let xmlTexto = "";
+const API_URL = "https://nokia-backend.onrender.com/borrarWNCELG";
 
-document.getElementById("xmlFile").addEventListener("change", function() {
-    let reader = new FileReader();
-    reader.onload = e => xmlTexto = e.target.result;
-    reader.readAsText(this.files[0]);
-});
+// ID fijo elegido → Sector 3
+const WNCEL_ID_SECTOR3 = "192101108";
 
-/* =========================================================
-   1) DETECTAR INTENCIÓN DEL USUARIO
-   ========================================================= */
-function procesar() {
-    const pregunta = document.getElementById("pregunta").value.toLowerCase();
+async function procesarPregunta() {
 
-    if (!xmlTexto) {
-        alert("Primero sube un XML.");
+    const pregunta = document.getElementById("userQuestion").value.toLowerCase();
+    const archivo = document.getElementById("xmlInput").files[0];
+
+    if (!archivo) {
+        alert("Debes cargar un XML primero.");
         return;
     }
 
-    if (
+    // Detectar comando del usuario
+    const borrar3g = (
         pregunta.includes("borrar") &&
         pregunta.includes("sector 3") &&
         pregunta.includes("3g")
-    ) {
-        borrarSector3_3G();
+    );
+
+    if (!borrar3g) {
+        document.getElementById("legendResponse").innerHTML =
+        `<div class='legend-response-bubble'>
+            ❌ No entiendo esa instrucción.<br>
+            Puedes decir: <b>borrar celda del sector 3 celda 3G</b>
+        </div>`;
         return;
     }
 
-    document.getElementById("respuesta").innerHTML =
-        "<b>❌ Orden no reconocida.</b>";
-}
+    // Construir paquete
+    let formData = new FormData();
+    formData.append("xml_file", archivo);
+    formData.append("wncel_id", WNCEL_ID_SECTOR3);
 
-/* =========================================================
-   2) EXTRAER EL ID A BORRAR → último p de wncelIdList
-   ========================================================= */
-function extraerUltimoWNCEL_ID(xmlText) {
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(xmlText, "text/xml");
-
-    const lista = xmlDoc.querySelector("managedObject[class='com.nokia.srbts.wcdma:WNCELG'] list[name='wncelIdList']");
-    if (!lista) return null;
-
-    const items = lista.querySelectorAll("p");
-    if (items.length === 0) return null;
-
-    return items[items.length - 1].textContent.trim();
-}
-
-/* =========================================================
-   3) LLAMAR BACKEND /borrarWNCELG
-   ========================================================= */
-async function borrarSector3_3G() {
-    const id = extraerUltimoWNCEL_ID(xmlTexto);
-
-    if (!id) {
-        document.getElementById("respuesta").innerHTML =
-            "<b>❌ No se encontró ningún ID dentro de wncelIdList.</b>";
-        return;
-    }
-
-    let form = new FormData();
-    form.append("xml_file", new Blob([xmlTexto], { type: "text/xml" }), "entrada.xml");
-    form.append("wncel_id", id);
-
-    const API_URL = "https://tuservidor.onrender.com/borrarWNCELG";
-
+    // Llamar a la API de Render
     const resp = await fetch(API_URL, {
         method: "POST",
-        body: form
+        body: formData
     });
 
     if (!resp.ok) {
-        document.getElementById("respuesta").innerHTML =
-            "<b>❌ Error: no se pudo eliminar el ID " + id + "</b>";
+        document.getElementById("legendResponse").innerHTML =
+        `<div class='legend-response-bubble'>
+            ❌ Error al procesar la solicitud.<br>
+            No se pudo borrar la celda 3G del sector 3.
+        </div>`;
         return;
     }
 
+    // Descargar XML modificado
     const blob = await resp.blob();
-    const url = URL.createObjectURL(blob);
+    const url = window.URL.createObjectURL(blob);
 
-    document.getElementById("respuesta").innerHTML = `
-        <b>✔ Celda 3G del sector 3 eliminada correctamente.</b><br><br>
-        <a href="${url}" download="XML_modificado.xml">
-            <button>📥 Descargar XML modificado</button>
-        </a>
-    `;
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "XML_sin_sector3_3G.xml";
+    link.click();
+
+    document.getElementById("legendResponse").innerHTML =
+    `<div class='legend-response-bubble'>
+        ✔ Operación completada.<br><br>
+        La celda <b>3G</b> del <b>sector 3</b> fue eliminada correctamente.<br>
+        📥 Archivo descargado.
+    </div>`;
 }
 </script>
 
