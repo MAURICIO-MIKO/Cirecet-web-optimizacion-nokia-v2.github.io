@@ -143,10 +143,7 @@
 </div>
 
 <script>
-const API_URL = "https://nokia-backend.onrender.com/borrarWNCELG";
-
-// ID fijo del WNCEL del sector 3 que quieres borrar
-const WNCEL_ID_SECTOR3 = "192101108";
+const API_URL = "https://nokia-backend.onrender.com/borrarSector3G";
 
 async function procesarPregunta() {
 
@@ -158,26 +155,38 @@ async function procesarPregunta() {
         return;
     }
 
-    // Detectar el comando
-    const borrarSector3 = (
-        pregunta.includes("borrar") &&
-        pregunta.includes("sector 3") &&
-        pregunta.includes("3g")
-    );
+    // ==============================
+    // 🔍 EXTRAER SECTOR DESDE EL TEXTO
+    // ==============================
+    const match = pregunta.match(/sector\s+([1-9])/);
 
-    if (!borrarSector3) {
+    if (!match) {
         document.getElementById("legendResponse").innerHTML =
         `<div class='legend-response-bubble'>
-            ❌ No entiendo esa instrucción.<br>
-            Usa: <b>borrar celda del sector 3 celda 3G</b>
+            ❌ Debes indicar el sector.<br>
+            Ejemplo: <b>borrar celda del sector 3 3G</b>
         </div>`;
         return;
     }
 
-    // Enviar archivo y ID al backend
+    const sector = parseInt(match[1]);
+
+    // Verificar que sea 3G
+    if (!(pregunta.includes("borrar") && pregunta.includes("3g"))) {
+        document.getElementById("legendResponse").innerHTML =
+        `<div class='legend-response-bubble'>
+            ❌ No entiendo esa instrucción.<br>
+            Ejemplo válido: <b>borrar sector 2 3G</b>
+        </div>`;
+        return;
+    }
+
+    // ==============================
+    // 📦 PREPARAR PETICIÓN AL BACKEND
+    // ==============================
     let formData = new FormData();
     formData.append("xml_file", archivo);
-    formData.append("wncel_id", WNCEL_ID_SECTOR3);
+    formData.append("sector", sector);
 
     let resp;
 
@@ -186,41 +195,49 @@ async function procesarPregunta() {
             method: "POST",
             body: formData
         });
-    } catch (error) {
+    } 
+    catch (error) {
         document.getElementById("legendResponse").innerHTML =
         `<div class='legend-response-bubble'>
             ❌ No se pudo conectar con el backend.<br>
-            Verifica que Render esté activo.
+            Asegúrate que Render esté activo.
         </div>`;
         return;
     }
 
+    // ==============================
+    // ❌ ERROR DEVUELTO POR BACKEND
+    // ==============================
     if (!resp.ok) {
+        const data = await resp.json();
+
         document.getElementById("legendResponse").innerHTML =
         `<div class='legend-response-bubble'>
-            ❌ Error procesando XML.<br>
-            El backend no pudo borrar la celda.
+            ❌ Error: ${data.error || "No se pudo borrar la celda"}<br>
+            Revisa que el sector exista.
         </div>`;
         return;
     }
 
-    // Descargar archivo modificado
+    // ==============================
+    // ✔ DESCARGAR ARCHIVO MODIFICADO
+    // ==============================
     const blob = await resp.blob();
     const url = window.URL.createObjectURL(blob);
 
     const link = document.createElement("a");
     link.href = url;
-    link.download = "XML_sin_sector3_3G.xml";
+    link.download = `XML_sin_sector${sector}_3G.xml`;
     link.click();
 
-    // Mostrar respuesta amigable
     document.getElementById("legendResponse").innerHTML =
     `<div class='legend-response-bubble'>
-        ✔ La celda <b>3G</b> del <b>sector 3</b> se eliminó correctamente.<br>
+        ✔ La celda <b>3G</b> del <b>sector ${sector}</b> fue eliminada correctamente.<br>
         📥 Archivo descargado.
     </div>`;
 }
 </script>
+
 
 </body>
 </html>
