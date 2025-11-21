@@ -112,19 +112,18 @@
 <body>
 
 <header class="navbar">
-    <div class="logo">🤖 Legend Assistant</div>
+    <div class="logo">🤖 Legend Asistente</div>
 
     <div class="nav-actions">
-        <button onclick="window.location.href='panelSeleccion.html'">🏠 Inicio</button>
         <button onclick="window.location.href='manualUsuarioNokia.html'">📘 Manual</button>
-        <button class="active">🤖 Asistente</button>
+        <button class="active">🤖 </button>
         <button onclick="window.history.back()">⬅️ Atrás</button>
     </div>
 </header>
 
 <div class="container">
 
-<h1>🧠 Legend — Modo Asistente Avanzado</h1>
+<h1>🧠 Asistente Avanzado version 1.0</h1>
 <p>Sube tu XML y pregúntame algo.</p>
 
 <div class="legend-analyzer">
@@ -146,7 +145,7 @@
 <script>
 const API_URL = "https://nokia-backend.onrender.com/borrarWNCELG";
 
-// ID fijo elegido → Sector 3
+// ID fijo del WNCEL del sector 3 que quieres borrar
 const WNCEL_ID_SECTOR3 = "192101108";
 
 async function procesarPregunta() {
@@ -159,43 +158,53 @@ async function procesarPregunta() {
         return;
     }
 
-    // Detectar comando del usuario
-    const borrar3g = (
+    // Detectar el comando
+    const borrarSector3 = (
         pregunta.includes("borrar") &&
         pregunta.includes("sector 3") &&
         pregunta.includes("3g")
     );
 
-    if (!borrar3g) {
+    if (!borrarSector3) {
         document.getElementById("legendResponse").innerHTML =
         `<div class='legend-response-bubble'>
             ❌ No entiendo esa instrucción.<br>
-            Puedes decir: <b>borrar celda del sector 3 celda 3G</b>
+            Usa: <b>borrar celda del sector 3 celda 3G</b>
         </div>`;
         return;
     }
 
-    // Construir paquete
+    // Enviar archivo y ID al backend
     let formData = new FormData();
     formData.append("xml_file", archivo);
     formData.append("wncel_id", WNCEL_ID_SECTOR3);
 
-    // Llamar a la API de Render
-    const resp = await fetch(API_URL, {
-        method: "POST",
-        body: formData
-    });
+    let resp;
 
-    if (!resp.ok) {
+    try {
+        resp = await fetch(API_URL, {
+            method: "POST",
+            body: formData
+        });
+    } catch (error) {
         document.getElementById("legendResponse").innerHTML =
         `<div class='legend-response-bubble'>
-            ❌ Error al procesar la solicitud.<br>
-            No se pudo borrar la celda 3G del sector 3.
+            ❌ No se pudo conectar con el backend.<br>
+            Verifica que Render esté activo.
         </div>`;
         return;
     }
 
-    // Descargar XML modificado
+    if (!resp.ok) {
+        document.getElementById("legendResponse").innerHTML =
+        `<div class='legend-response-bubble'>
+            ❌ Error procesando XML.<br>
+            El backend no pudo borrar la celda.
+        </div>`;
+        return;
+    }
+
+    // Descargar archivo modificado
     const blob = await resp.blob();
     const url = window.URL.createObjectURL(blob);
 
@@ -204,10 +213,10 @@ async function procesarPregunta() {
     link.download = "XML_sin_sector3_3G.xml";
     link.click();
 
+    // Mostrar respuesta amigable
     document.getElementById("legendResponse").innerHTML =
     `<div class='legend-response-bubble'>
-        ✔ Operación completada.<br><br>
-        La celda <b>3G</b> del <b>sector 3</b> fue eliminada correctamente.<br>
+        ✔ La celda <b>3G</b> del <b>sector 3</b> se eliminó correctamente.<br>
         📥 Archivo descargado.
     </div>`;
 }
