@@ -155,88 +155,59 @@ async function procesarPregunta() {
         return;
     }
 
-    // ==============================
-    // 🔍 EXTRAER SECTOR DESDE EL TEXTO
-    // ==============================
-    const match = pregunta.match(/sector\s+([1-9])/);
+    // Detectar SECTOR
+    let sector = null;
 
-    if (!match) {
-        document.getElementById("legendResponse").innerHTML =
-        `<div class='legend-response-bubble'>
-            ❌ Debes indicar el sector.<br>
-            Ejemplo: <b>borrar celda del sector 3 3G</b>
+    if (pregunta.includes("sector 1") && pregunta.includes("3g")) sector = 1;
+    if (pregunta.includes("sector 2") && pregunta.includes("3g")) sector = 2;
+    if (pregunta.includes("sector 3") && pregunta.includes("3g")) sector = 3;
+
+    if (!sector) {
+        document.getElementById("legendResponse").innerHTML = `
+        <div class='legend-response-bubble'>
+        ❌ No entiendo la instrucción.<br>
+        Usa algo como:<br>
+        <b>"legend borra sector 2 3g"</b>
         </div>`;
         return;
     }
 
-    const sector = parseInt(match[1]);
-
-    // Verificar que sea 3G
-    if (!(pregunta.includes("borrar") && pregunta.includes("3g"))) {
-        document.getElementById("legendResponse").innerHTML =
-        `<div class='legend-response-bubble'>
-            ❌ No entiendo esa instrucción.<br>
-            Ejemplo válido: <b>borrar sector 2 3G</b>
-        </div>`;
-        return;
-    }
-
-    // ==============================
-    // 📦 PREPARAR PETICIÓN AL BACKEND
-    // ==============================
     let formData = new FormData();
     formData.append("xml_file", archivo);
-    formData.append("sector", sector);
+    formData.append("sector", sector);  // ← 🔥 IMPORTANTE
 
-    let resp;
+    let resp = await fetch(API_URL, {
+        method: "POST",
+        body: formData
+    });
 
-    try {
-        resp = await fetch(API_URL, {
-            method: "POST",
-            body: formData
-        });
-    } 
-    catch (error) {
-        document.getElementById("legendResponse").innerHTML =
-        `<div class='legend-response-bubble'>
-            ❌ No se pudo conectar con el backend.<br>
-            Asegúrate que Render esté activo.
-        </div>`;
-        return;
-    }
-
-    // ==============================
-    // ❌ ERROR DEVUELTO POR BACKEND
-    // ==============================
     if (!resp.ok) {
-        const data = await resp.json();
+        let error = await resp.json();
 
-        document.getElementById("legendResponse").innerHTML =
-        `<div class='legend-response-bubble'>
-            ❌ Error: ${data.error || "No se pudo borrar la celda"}<br>
-            Revisa que el sector exista.
+        document.getElementById("legendResponse").innerHTML = `
+        <div class='legend-response-bubble'>
+            ❌ Error: ${error.error}
         </div>`;
         return;
     }
 
-    // ==============================
-    // ✔ DESCARGAR ARCHIVO MODIFICADO
-    // ==============================
+    // Descargar XML
     const blob = await resp.blob();
     const url = window.URL.createObjectURL(blob);
 
     const link = document.createElement("a");
     link.href = url;
-    link.download = `XML_sin_sector${sector}_3G.xml`;
+    link.download = "XML_sin_sector" + sector + "_3G.xml";
     link.click();
 
-    document.getElementById("legendResponse").innerHTML =
-    `<div class='legend-response-bubble'>
-        ✔ La celda <b>3G</b> del <b>sector ${sector}</b> fue eliminada correctamente.<br>
+    document.getElementById("legendResponse").innerHTML = `
+    <div class='legend-response-bubble'>
+        ✔ Celda 3G del sector ${sector} borrada correctamente.<br>
         📥 Archivo descargado.
     </div>`;
 }
 </script>
+
 
 
 </body>
