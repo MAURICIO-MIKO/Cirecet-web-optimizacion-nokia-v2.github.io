@@ -155,7 +155,6 @@ async function procesarPregunta() {
         return;
     }
 
-    // Detectar SECTOR
     let sector = null;
 
     if (pregunta.includes("sector 1") && pregunta.includes("3g")) sector = 1;
@@ -163,50 +162,58 @@ async function procesarPregunta() {
     if (pregunta.includes("sector 3") && pregunta.includes("3g")) sector = 3;
 
     if (!sector) {
-        document.getElementById("legendResponse").innerHTML = `
-        <div class='legend-response-bubble'>
-        ❌ No entiendo la instrucción.<br>
-        Usa algo como:<br>
-        <b>"legend borra sector 2 3g"</b>
+        document.getElementById("legendResponse").innerHTML =
+        `<div class='legend-response-bubble'>
+            ❌ No entiendo la instrucción.<br>
+            Usa: <b>"legend borra sector 2 3g"</b>
         </div>`;
         return;
     }
 
     let formData = new FormData();
     formData.append("xml_file", archivo);
-    formData.append("sector", sector);  // ← 🔥 IMPORTANTE
+    formData.append("sector", String(sector).trim());  // 🔥 OBLIGATORIO
 
-    let resp = await fetch(API_URL, {
-        method: "POST",
-        body: formData
-    });
+    let resp;
 
-    if (!resp.ok) {
-        let error = await resp.json();
-
-        document.getElementById("legendResponse").innerHTML = `
-        <div class='legend-response-bubble'>
-            ❌ Error: ${error.error}
+    try {
+        resp = await fetch(API_URL, {
+            method: "POST",
+            body: formData
+        });
+    } catch (error) {
+        document.getElementById("legendResponse").innerHTML =
+        `<div class='legend-response-bubble'>
+            ❌ Error de conexión con el backend.
         </div>`;
         return;
     }
 
-    // Descargar XML
+    if (!resp.ok) {
+        let error = await resp.json();
+        document.getElementById("legendResponse").innerHTML =
+        `<div class='legend-response-bubble'>
+            ❌ Error: ${error.error || "Error desconocido"}
+        </div>`;
+        return;
+    }
+
     const blob = await resp.blob();
     const url = window.URL.createObjectURL(blob);
 
     const link = document.createElement("a");
     link.href = url;
-    link.download = "XML_sin_sector" + sector + "_3G.xml";
+    link.download = `XML_sin_sector${sector}_3G.xml`;
     link.click();
 
-    document.getElementById("legendResponse").innerHTML = `
-    <div class='legend-response-bubble'>
-        ✔ Celda 3G del sector ${sector} borrada correctamente.<br>
+    document.getElementById("legendResponse").innerHTML =
+    `<div class='legend-response-bubble'>
+        ✔ Celda 3G del sector ${sector} eliminada<br>
         📥 Archivo descargado.
     </div>`;
 }
 </script>
+
 
 
 
